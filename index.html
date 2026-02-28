@@ -1,44 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>GATE Mock Test</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>GATE 2026 Mock Test</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="no-scroll">
+<!-- ====================== AUTH CONTAINER ====================== -->
+<div id="authContainer">
 
-<header>
-    <h2>GATE 2026 Mock Test</h2>
-    <div id="timer">03:00:00</div>
-</header>
-
-<div class="container">
-
-    <div class="question-panel">
-        <h3 id="question-info"></h3>
-        <div id="question-text"></div>
-        <div id="options"></div>
-
-        <div class="buttons">
-            <button onclick="markForReview()">Mark for Review & Next</button>
-            <button onclick="clearResponse()">Clear Response</button>
-            <button onclick="saveNext()">Save & Next</button>
-        </div>
+    <!-- LOGIN FORM -->
+    <div id="loginView">
+        <h2>Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email" required><br>
+        <input type="password" id="loginPassword" placeholder="Password" required><br>
+        <button type="button" onclick="login()">Login</button>
+        <p>No account? <a href="#" onclick="showSignup()">Sign Up</a></p>
     </div>
 
-    <div class="palette-panel">
-        <h3>Question Palette</h3>
-        <div id="palette"></div>
-
-        <div class="legend">
-            <p><span class="box notVisited"></span> Not Visited</p>
-            <p><span class="box notAnswered"></span> Not Answered</p>
-            <p><span class="box answered"></span> Answered</p>
-            <p><span class="box marked"></span> Marked</p>
-        </div>
-
-        <button onclick="submitExam()" class="submit-btn">Submit Test</button>
+    <!-- SIGNUP FORM -->
+    <div id="signupView" style="display:none;">
+        <h2>Sign Up</h2>
+        <input type="text" id="signupName" placeholder="Full Name" required><br>
+        <input type="email" id="signupEmail" placeholder="Email" required><br>
+        <input type="password" id="signupPassword" placeholder="Password" required><br>
+        <button type="button" onclick="signup()">Sign Up</button>
+        <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
     </div>
 
+</div>
+
+<!-- ====================== TEST CONTAINER ====================== -->
+<div id="testView">
+    <header>
+        <h2>GATE 2026 Mock Test</h2>
+        <div id="timer">03:00:00</div>
+        <button type="button" onclick="logout()">Logout</button>
+    </header>
+
+    <div class="container">
+
+        <div class="question-panel">
+            <h3 id="question-info"></h3>
+            <div id="question-text"></div>
+            <div id="options"></div>
+            <div>
+                <button type="button" onclick="markForReview()">Mark & Next</button>
+                <button type="button" onclick="clearResponse()">Clear</button>
+                <button type="button" onclick="saveNext()">Save & Next</button>
+            </div>
+        </div>
+
+        <div class="palette-panel">
+            <h3>Question Palette</h3>
+            <div id="palette"></div>
+
+            <div class="legend">
+                <p><span class="box notVisited"></span> Not Visited</p>
+                <p><span class="box notAnswered"></span> Not Answered</p>
+                <p><span class="box answered"></span> Answered</p>
+                <p><span class="box marked"></span> Marked</p>
+            </div>
+
+            <button type="button" onclick="submitExam()">Submit Test</button>
+        </div>
+
+        <!-- DEBUG PANEL -->
+        <div id="debugPanel">
+            <h3>Debug Panel - Registered Users & Results</h3>
+            <button type="button" onclick="showUsers()">Show Users</button>
+            <div id="usersList"></div>
+        </div>
+
+    </div>
 </div>
 
 <script src="script.js"></script>

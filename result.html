@@ -1,71 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>GATE Test Result</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<title>GATE Test Result</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f0f4f8;
+        margin: 0;
+        padding: 30px;
+        text-align: center;
+    }
 
-    <style>
-        body{
-            font-family: Arial;
-            background: #f4f6f9;
-            padding: 30px;
-            text-align: center;
-        }
+    h1 {
+        margin-bottom: 20px;
+        color: #007bff;
+    }
 
-        .card{
-            background: white;
-            padding: 25px;
-            margin: 20px auto;
-            border-radius: 10px;
-            width: 85%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+    .card {
+        background: linear-gradient(145deg, #ffffff, #e6eaf0);
+        padding: 25px;
+        margin: 20px auto;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 900px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
 
-        .big-score{
-            font-size: 42px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
 
-        .summary-grid{
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
+    .big-score {
+        font-size: 48px;
+        font-weight: 700;
+        margin: 15px 0;
+        color: #007bff;
+    }
 
-        .summary-box{
-            background: #f1f3f6;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
+    .score-ring {
+        position: relative;
+        display: inline-block;
+    }
 
-        table{
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    .score-ring canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 
-        th, td{
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
 
-        th{
-            background: #007bff;
-            color: white;
-        }
+    .summary-box {
+        background: #f1f3f6;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: transform 0.3s;
+    }
 
-        canvas{
-            max-width: 400px;
-            margin: 20px auto;
-        }
+    .summary-box:hover {
+        transform: translateY(-3px);
+    }
 
-        .green{ color: #28a745; }
-        .red{ color: #dc3545; }
-        .orange{ color: #ffc107; }
-    </style>
+    .green { color: #28a745; }
+    .red { color: #dc3545; }
+    .orange { color: #ffc107; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background: #007bff;
+        color: white;
+    }
+
+    table tbody tr:nth-child(even) { background: #f9fafb; }
+    table tbody tr:hover { background: #d9eaf7; }
+
+    .status-icon { font-size: 16px; margin-right: 6px; }
+
+    /* Confetti container */
+    .confetti {
+        position: absolute;
+        width: 100%;
+        height: 0;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        overflow: visible;
+    }
+
+    canvas {
+        max-width: 400px;
+        margin: 20px auto;
+    }
+
+    @media (max-width: 600px){
+        .big-score { font-size: 36px; }
+        .summary-grid { gap: 10px; }
+    }
+</style>
 </head>
 
 <body>
@@ -73,7 +126,10 @@
 <h1>🎓 GATE Test Analysis</h1>
 
 <div class="card">
-    <div class="big-score" id="totalScore">Final Score: 0</div>
+    <div class="score-ring">
+        <canvas id="scoreRing" width="0" height="0"></canvas>
+        <div class="big-score" id="totalScore">0</div>
+    </div>
     <div id="performance"></div>
 
     <div class="summary-grid">
@@ -106,7 +162,6 @@
 </div>
 
 <script>
-
 // ================= LOAD DATA =================
 let questions = JSON.parse(localStorage.getItem("gateResult"));
 
@@ -116,79 +171,82 @@ if(!questions || questions.length === 0){
 }
 
 // ================= CALCULATION =================
-let total = 0;
-let totalPositive = 0;
-let totalNegative = 0;
-let correct = 0;
-let wrong = 0;
-let notAttempted = 0;
+let total = 0, totalPositive = 0, totalNegative = 0;
+let correct = 0, wrong = 0, notAttempted = 0;
 
 questions.forEach(q => {
-
     if(q.selected === null){
         notAttempted++;
-    }
-    else if(Number(q.selected) === Number(q.answer)){
+    } else if(Number(q.selected) === Number(q.answer)){
         correct++;
         total += Number(q.marks);
         totalPositive += Number(q.marks);
-    }
-    else{
+    } else {
         wrong++;
         total -= Number(q.negative);
         totalNegative += Number(q.negative);
     }
 });
 
-// Round to 2 decimals
 total = parseFloat(total.toFixed(2));
 totalPositive = parseFloat(totalPositive.toFixed(2));
 totalNegative = parseFloat(totalNegative.toFixed(2));
 
-// ================= DISPLAY SUMMARY =================
 document.getElementById("totalQ").innerText = questions.length;
 document.getElementById("positive").innerText = totalPositive;
 document.getElementById("negative").innerText = totalNegative;
 
-// ================= SAFE SCORE ANIMATION =================
-let scoreElement = document.getElementById("totalScore");
-let current = 0;
-let target = total;
+// ================= SCORE ANIMATION + RING =================
+let scoreEl = document.getElementById("totalScore");
+let currentScore = 0;
+let targetScore = total;
+let step = targetScore >= 0 ? 1 : -1;
 
-let step = target >= 0 ? 1 : -1;
+let ringCtx = document.getElementById('scoreRing').getContext('2d');
+let ringPercent = 0;
 
-let interval = setInterval(() => {
+function drawRing(percent){
+    ringCtx.clearRect(0,0,150,150);
+    ringCtx.lineWidth = 12;
+    ringCtx.strokeStyle = '#e6eaf0';
+    ringCtx.beginPath();
+    ringCtx.arc(75,75,65,0,2*Math.PI);
+    ringCtx.stroke();
 
-    if ((step > 0 && current >= target) ||
-        (step < 0 && current <= target)) {
+    let angle = 2*Math.PI*percent/100 - Math.PI/2;
+    let gradient = ringCtx.createLinearGradient(0,0,150,0);
+    gradient.addColorStop(0, '#28a745');
+    gradient.addColorStop(1, '#007bff');
+    ringCtx.strokeStyle = gradient;
+    ringCtx.beginPath();
+    ringCtx.arc(75,75,65,-Math.PI/2, angle);
+    ringCtx.stroke();
+}
 
-        current = target;
-        scoreElement.innerText = "Final Score: " + current;
+let interval = setInterval(()=>{
+    if((step>0 && currentScore>=targetScore) || (step<0 && currentScore<=targetScore)){
+        currentScore = targetScore;
         clearInterval(interval);
-        return;
     }
+    else currentScore += step;
 
-    current += step;
-    scoreElement.innerText = "Final Score: " + current;
-
-}, 5);
+    scoreEl.innerText = currentScore;
+    ringPercent = Math.min((correct/questions.length)*100, 100);
+    drawRing(ringPercent);
+},5);
 
 // ================= PERFORMANCE MESSAGE =================
 let percent = (correct / questions.length) * 100;
 let message = "";
-
 if(percent >= 75){
     message = "🔥 Excellent Performance! 🚀";
-}
-else if(percent >= 50){
+    launchConfetti();
+} else if(percent >= 50){
     message = "🙂 Good Job! Can Improve 👍";
-}
-else{
+} else {
     message = "⚠️ Needs Improvement 💪";
 }
-
-document.getElementById("performance").innerHTML =
-    `<h3>${message}</h3>`;
+document.getElementById("performance").innerHTML = `<h3>${message}</h3>`;
 
 // ================= PIE CHART =================
 new Chart(document.getElementById("pieChart"), {
@@ -199,7 +257,8 @@ new Chart(document.getElementById("pieChart"), {
             data: [correct, wrong, notAttempted],
             backgroundColor: ["#28a745", "#dc3545", "#ffc107"]
         }]
-    }
+    },
+    options: { responsive: true, animation: { animateRotate:true, animateScale:true } }
 });
 
 // ================= BAR CHART =================
@@ -212,38 +271,58 @@ new Chart(document.getElementById("barChart"), {
             data: [correct, wrong, notAttempted],
             backgroundColor: ["#28a745", "#dc3545", "#ffc107"]
         }]
-    }
+    },
+    options: { responsive:true, plugins: { legend:{display:false} } }
 });
 
 // ================= TABLE =================
 let tableBody = document.getElementById("tableBody");
-
-questions.forEach((q,index) => {
-
-    let status = "";
-    let marks = 0;
-
-    if(q.selected === null){
-        status = "Not Attempted";
-    }
-    else if(Number(q.selected) === Number(q.answer)){
-        status = "Correct";
-        marks = q.marks;
-    }
-    else{
-        status = "Wrong";
-        marks = -q.negative;
-    }
-
-    tableBody.innerHTML += `
-        <tr>
-            <td>${index+1}</td>
-            <td>${status}</td>
-            <td>${marks}</td>
-        </tr>
-    `;
+questions.forEach((q,index)=>{
+    let status="", marks=0, icon="";
+    if(q.selected === null){ status="Not Attempted"; marks=0; icon="⚪"; }
+    else if(Number(q.selected) === Number(q.answer)){ status="Correct"; marks=q.marks; icon="✅"; }
+    else { status="Wrong"; marks=-q.negative; icon="❌"; }
+    tableBody.innerHTML += `<tr>
+        <td>${index+1}</td>
+        <td>${icon} ${status}</td>
+        <td>${marks}</td>
+    </tr>`;
 });
 
+// ================= CONFETTI =================
+function launchConfetti(){
+    const confettiContainer = document.createElement('div');
+    confettiContainer.className = 'confetti';
+    document.body.appendChild(confettiContainer);
+
+    for(let i=0;i<100;i++){
+        const confetti = document.createElement('div');
+        confetti.style.position='absolute';
+        confetti.style.width='8px';
+        confetti.style.height='8px';
+        confetti.style.backgroundColor=['#28a745','#dc3545','#ffc107','#007bff'][Math.floor(Math.random()*4)];
+        confetti.style.top='0px';
+        confetti.style.left=Math.random()*window.innerWidth+'px';
+        confetti.style.opacity=Math.random();
+        confetti.style.transform='rotate('+Math.random()*360+'deg)';
+        confetti.style.borderRadius='50%';
+        confettiContainer.appendChild(confetti);
+
+        (function(el){
+            let top=0;
+            let left=parseFloat(el.style.left);
+            let speedY=2+Math.random()*3;
+            let speedX=(Math.random()-0.5)*2;
+            setInterval(()=>{
+                top+=speedY;
+                left+=speedX;
+                el.style.top=top+'px';
+                el.style.left=left+'px';
+                if(top>window.innerHeight){ top=0; left=Math.random()*window.innerWidth; }
+            },20);
+        })(confetti);
+    }
+}
 </script>
 
 </body>
