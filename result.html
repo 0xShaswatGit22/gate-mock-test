@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GATE Test Result</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body{
+            font-family: Arial;
+            background: #f4f6f9;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card{
+            background: white;
+            padding: 25px;
+            margin: 20px auto;
+            border-radius: 10px;
+            width: 85%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .big-score{
+            font-size: 42px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .summary-grid{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-box{
+            background: #f1f3f6;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td{
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        th{
+            background: #007bff;
+            color: white;
+        }
+
+        canvas{
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .green{ color: #28a745; }
+        .red{ color: #dc3545; }
+        .orange{ color: #ffc107; }
+    </style>
+</head>
+
+<body>
+
+<h1>🎓 GATE Test Analysis</h1>
+
+<div class="card">
+    <div class="big-score" id="totalScore">Final Score: 0</div>
+    <div id="performance"></div>
+
+    <div class="summary-grid">
+        <div class="summary-box">Total Questions: <span id="totalQ"></span></div>
+        <div class="summary-box green">Total Positive: +<span id="positive"></span></div>
+        <div class="summary-box red">Total Negative: -<span id="negative"></span></div>
+    </div>
+</div>
+
+<div class="card">
+    <canvas id="pieChart"></canvas>
+</div>
+
+<div class="card">
+    <canvas id="barChart"></canvas>
+</div>
+
+<div class="card">
+    <h3>Detailed Question Analysis</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Q.No</th>
+                <th>Status</th>
+                <th>Marks</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+</div>
+
+<script>
+
+// ================= LOAD DATA =================
+let questions = JSON.parse(localStorage.getItem("gateResult"));
+
+if(!questions || questions.length === 0){
+    alert("No result data found!");
+    window.location.href = "index.html";
+}
+
+// ================= CALCULATION =================
+let total = 0;
+let totalPositive = 0;
+let totalNegative = 0;
+let correct = 0;
+let wrong = 0;
+let notAttempted = 0;
+
+questions.forEach(q => {
+
+    if(q.selected === null){
+        notAttempted++;
+    }
+    else if(Number(q.selected) === Number(q.answer)){
+        correct++;
+        total += Number(q.marks);
+        totalPositive += Number(q.marks);
+    }
+    else{
+        wrong++;
+        total -= Number(q.negative);
+        totalNegative += Number(q.negative);
+    }
+});
+
+// Round to 2 decimals
+total = parseFloat(total.toFixed(2));
+totalPositive = parseFloat(totalPositive.toFixed(2));
+totalNegative = parseFloat(totalNegative.toFixed(2));
+
+// ================= DISPLAY SUMMARY =================
+document.getElementById("totalQ").innerText = questions.length;
+document.getElementById("positive").innerText = totalPositive;
+document.getElementById("negative").innerText = totalNegative;
+
+// ================= SAFE SCORE ANIMATION =================
+let scoreElement = document.getElementById("totalScore");
+let current = 0;
+let target = total;
+
+let step = target >= 0 ? 1 : -1;
+
+let interval = setInterval(() => {
+
+    if ((step > 0 && current >= target) ||
+        (step < 0 && current <= target)) {
+
+        current = target;
+        scoreElement.innerText = "Final Score: " + current;
+        clearInterval(interval);
+        return;
+    }
+
+    current += step;
+    scoreElement.innerText = "Final Score: " + current;
+
+}, 5);
+
+// ================= PERFORMANCE MESSAGE =================
+let percent = (correct / questions.length) * 100;
+let message = "";
+
+if(percent >= 75){
+    message = "🔥 Excellent Performance! 🚀";
+}
+else if(percent >= 50){
+    message = "🙂 Good Job! Can Improve 👍";
+}
+else{
+    message = "⚠️ Needs Improvement 💪";
+}
+
+document.getElementById("performance").innerHTML =
+    `<h3>${message}</h3>`;
+
+// ================= PIE CHART =================
+new Chart(document.getElementById("pieChart"), {
+    type: "pie",
+    data: {
+        labels: ["Correct", "Wrong", "Not Attempted"],
+        datasets: [{
+            data: [correct, wrong, notAttempted],
+            backgroundColor: ["#28a745", "#dc3545", "#ffc107"]
+        }]
+    }
+});
+
+// ================= BAR CHART =================
+new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+        labels: ["Correct", "Wrong", "Not Attempted"],
+        datasets: [{
+            label: "Question Count",
+            data: [correct, wrong, notAttempted],
+            backgroundColor: ["#28a745", "#dc3545", "#ffc107"]
+        }]
+    }
+});
+
+// ================= TABLE =================
+let tableBody = document.getElementById("tableBody");
+
+questions.forEach((q,index) => {
+
+    let status = "";
+    let marks = 0;
+
+    if(q.selected === null){
+        status = "Not Attempted";
+    }
+    else if(Number(q.selected) === Number(q.answer)){
+        status = "Correct";
+        marks = q.marks;
+    }
+    else{
+        status = "Wrong";
+        marks = -q.negative;
+    }
+
+    tableBody.innerHTML += `
+        <tr>
+            <td>${index+1}</td>
+            <td>${status}</td>
+            <td>${marks}</td>
+        </tr>
+    `;
+});
+
+</script>
+
+</body>
+</html>

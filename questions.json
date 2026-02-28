@@ -1,0 +1,194 @@
+[
+  {
+    "id": 1,
+    "question": "Fish : Shoal :: Lion : ______",
+    "marks": 1,
+    "negative": 0.33,
+    "options": ["Pride", "School", "Forest", "Series"],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Identify the grammatically correct sentence:",
+    "marks": 1,
+    "negative": 0.33,
+    "options": [
+      "It is I who am responsible for this fiasco.",
+      "It is myself who is responsible for this fiasco.",
+      "It is I who is responsible for this fiasco.",
+      "It is I who are responsible for this fiasco."
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Two cars P and Q start from X at 10 AM. P travels North at 25 km/h continuously. Q travels East at 30 km/h but stops after 1 hour. If both are same distance from X at 11:30 AM, how long did Q stop (minutes)?",
+    "marks": 2,
+    "negative": 0.66,
+    "options": ["10", "12", "15", "18"],
+    "answer": 2
+  },
+  {
+    "id": 4,
+    "question": "Which one is NOT correct for all x? (ce = ceiling, fl = floor)",
+    "marks": 1,
+    "negative": 0.33,
+    "options": [
+      "ce(x) ≥ x",
+      "fl(x) ≤ x",
+      "ce(x) ≥ fl(x)",
+      "fl(x) < ce(x)"
+    ],
+    "answer": 3
+  },
+  {
+    "id": 5,
+    "question": "Probability that P wins exactly 2 out of 3 matches if win probability is 0.8",
+    "marks": 1,
+    "negative": 0.33,
+    "options": ["48/125", "16/125", "16/25", "25/48"],
+    "answer": 1
+  },
+  {
+    "id": 6,
+    "question": "If HIDE → 19-23-7-11 and CAGE → 5-2-17-11, code for HIGH?",
+    "marks": 1,
+    "negative": 0.33,
+    "options": [
+      "5-17-1-2",
+      "17-19-13-17",
+      "13-3-1-2",
+      "19-23-17-19"
+    ],
+    "answer": 3
+  },
+  {
+    "id": 7,
+    "question": "Sequence of increasing number of mirror lines",
+    "marks": 1,
+    "negative": 0.33,
+    "options": [
+      "Circle; Square; Equilateral triangle; Isosceles triangle",
+      "Isosceles triangle; Equilateral triangle; Square; Circle",
+      "Equilateral triangle; Isosceles triangle; Square; Circle",
+      "Isosceles triangle; Square; Equilateral triangle; Circle"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 8,
+    "question": "Let A and B be real symmetric matrices. Which is correct?",
+    "marks": 1,
+    "negative": 0.33,
+    "options": [
+      "Aᵀ = A⁻¹",
+      "AB = BA",
+      "(AB)ᵀ = BᵀAᵀ",
+      "A = A⁻¹"
+    ],
+    "answer": 2
+  },
+  {
+    "id": 9,
+    "question": "Divergence of curl of any vector field is",
+    "marks": 1,
+    "negative": 0.33,
+    "options": ["magnitude", "argument", "magnitude of curl", "zero"],
+    "answer": 3
+  },
+  {
+    "id": 10,
+    "question": "Probability of at least one head when two coins are tossed",
+    "marks": 1,
+    "negative": 0.33,
+    "options": ["0.25", "0.5", "0.675", "0.75"],
+    "answer": 3
+  },
+  {
+    "id": 11,
+    "question": "Exit velocity comparison for identical tanks (water vs oil)",
+    "marks": 1,
+    "negative": 0.33,
+    "options": ["V₂ > V₁", "V₂ = V₁", "V₂ < V₁", "Insufficient data"],
+    "answer": 1
+  },
+  {
+    "id": 12,
+    "question": "Von Mises yield stress in pure shear if tensile yield = 200 MPa",
+    "marks": 2,
+    "negative": 0.66,
+    "options": ["115.5", "100.0", "66.7", "141.4"],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "Ceramics and glass commonly machined by",
+    "marks": 1,
+    "negative": 0.33,
+    "options": ["EDM", "Ultrasonic machining", "ECM", "Plasma machining"],
+    "answer": 1
+  },
+  {
+    "id": 14,
+    "question": "Hole 30+0.000 and shaft 30-0.020 fit type",
+    "marks": 1,
+    "negative": 0.33,
+    "options": ["Loose fit", "Interference fit", "Transition fit", "Clearance fit"],
+    "answer": 3
+  },
+  {
+    "id": 15,
+    "question": "Minimum value of f(x)=2x³-9x²+12x in [0,3]",
+    "marks": 2,
+    "negative": 0.66,
+    "options": ["0", "4", "5", "9"],
+    "answer": 1
+  },
+  {
+    "id": 16,
+    "question": "Wire drawing maximum reduction in single pass (closest)",
+    "marks": 2,
+    "negative": 0.66,
+    "options": ["51.2", "63.2", "75.0", "93.2"],
+    "answer": 1
+  },
+  {
+    "id": 17,
+    "question": "Rolling: thickness 30→27 mm, μ=0.12, roll dia=500 mm. Feasible?",
+    "marks": 2,
+    "negative": 0.66,
+    "options": [
+      "Feasible and 3.6",
+      "NOT feasible and 2.6",
+      "Feasible and 3.0",
+      "NOT feasible and 6.0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Cantilever beam + spring + mass system frequency",
+    "marks": 2,
+    "negative": 0.66,
+    "options": [
+      "√(3EI/L³ + K/m)",
+      "√(EI/L³ + K/m)",
+      "√(3EI/L³ + K/(2m))",
+      "√(EI/L³ + K/(2m))"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Soderberg criterion FS=2, maximum tensile stress equals",
+    "marks": 2,
+    "negative": 0.66,
+    "options": [
+      "1/4 endurance limit",
+      "1/2 endurance limit",
+      "endurance limit",
+      "twice endurance limit"
+    ],
+    "answer": 1
+  }
+]

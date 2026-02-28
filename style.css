@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: #0a3d62;
+    color: white;
+}
+
+.container {
+    display: flex;
+}
+
+.question-panel {
+    width: 70%;
+    padding: 20px;
+}
+
+.palette-panel {
+    width: 30%;
+    background: #f1f1f1;
+    padding: 20px;
+}
+
+#palette {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.palette-box {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.notVisited { background: white; border: 1px solid black; }
+.notAnswered { background: red; color: white; }
+.answered { background: green; color: white; }
+.marked { background: purple; color: white; }
+
+.box {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+
+.buttons button {
+    margin: 10px 5px 0 0;
+    padding: 8px 15px;
+}
+
+.submit-btn {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    background: #e84118;
+    color: white;
+    border: none;
+}
